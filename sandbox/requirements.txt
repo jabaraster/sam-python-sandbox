@@ -1,2 +1,4 @@
 requests
 numpy
+boto3
+opencv-python

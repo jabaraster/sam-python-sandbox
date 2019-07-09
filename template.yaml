@@ -21,3 +21,6 @@ Resources:
             Events: s3:ObjectCreated:*
   SrcBucket:
     Type: AWS::S3::Bucket
+
+  DestDynamoDB:
+    Type: AWS::DynamoDB:Table

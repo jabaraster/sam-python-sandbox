@@ -1,0 +1,4 @@
+.python-version
+.aws-sam/
+.temp/
+sandbox/__pycache__/

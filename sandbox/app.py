@@ -1,14 +1,12 @@
 import json
+import cv2
 import numpy as np
-
-# import requests
+import boto3
+import tempfile
+import images
 
 
 def lambda_handler(event, context):
-    print(event)
-    print(context)
-    print(np.asarray([1, 2, 3]))
-
     """Sample pure Lambda function
 
     Parameters
@@ -38,10 +36,17 @@ def lambda_handler(event, context):
 
     #     raise e
 
-    return {
-        "statusCode": 200,
-        "body": json.dumps({
-            "message": "hello world",
-            # "location": ip.text.replace("\n", "")
-        }),
-    }
+    s3Event = event["Records"][0]["s3"]
+    s3 = boto3.resource('s3')
+    obj = s3.Bucket(s3Event['bucket']['name']).Object(s3Event['object']['key'])
+
+    with tempfile.NamedTemporaryFile("wb") as f:
+        obj.download_fileobj(f)
+        img = cv2.imread(f.name)
+        s = images.sum_color(img)
+        return {
+            "statusCode": 200,
+            "body": json.dumps({
+                "color-summary": int(s)
+            }),
+        }
